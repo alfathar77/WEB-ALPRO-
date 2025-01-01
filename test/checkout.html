@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+        main {
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-top: 0;
+        }
+        #cart-items {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .total {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #007BFF;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Checkout</h1>
+    </header>
+    <main>
+        <section id="checkout-section">
+            <h2>Detail Pembelian</h2>
+            <div id="cart-items"></div>
+            <div class="total" id="total-price"></div>
+            <form id="checkout-form">
+                <label for="name">Nama:</label>
+                <input type="text" id="name" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+                <button type="submit">Konfirmasi Pembelian</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Toko Pakaian Online. Semua Hak Dilindungi.</p>
+    </footer>
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function displayCartItems() {
+            const cartItemsDiv = document.getElementById('cart-items');
+            const totalPriceDiv = document.getElementById('total-price');
+            cartItemsDiv.innerHTML = '';
+            let total = 0;
+
+            if (cart.length === 0) {
+                cartItemsDiv.innerHTML = '<p>Keranjang Anda kosong.</p>';
+                totalPriceDiv.innerHTML = '';
+                return;
+            }
+
+            cart.forEach(item => {
+                cartItemsDiv.innerHTML += `<p>${item.name} - Rp ${item.price}</p>`;
+                total += item.price;
+            });
+
+            totalPriceDiv.innerHTML = `Total: Rp ${total}`;
+        }
+
+        document.getElementById('checkout-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+
+            if (cart.length === 0) {
+                alert("Keranjang Anda kosong. Silakan tambahkan produk sebelum checkout.");
+                return;
+            }
+
+            let cartItems = cart.map(item => `${item.name} - Rp ${item.price}`).join('\n');
+            alert(`Terima kasih, ${name}! Pembelian Anda telah dikonfirmasi.\n\nDetail Pembelian:\n${cartItems}`);
+            localStorage.removeItem('cart'); // Clear the cart from local storage
+            cart = []; // Clear the cart variable
+            displayCartItems(); // Update the display
+            document.getElementById('checkout-form').reset(); // Reset the form
+        });
+
+        displayCartItems(); // Call the function to display cart items on page load
+    </script>
+</body>
+</html>
