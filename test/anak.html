@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kategori Pakaian Wanita</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add some basic styles for the cart */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }        
+        header {
+            background: url('aaank.jpeg') no-repeat center center/cover;
+            height: 67vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: rgb(11, 8, 8);
+        }
+        .cart {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #275c13;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            z-index: 1000;
+        }
+        .cart:hover {
+            background-color: #72BF78;
+        }
+        .cart-count {
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        .hero {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .product-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+        }
+        .product {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.2s;
+            text-align: center;
+            width: 200px;
+        }
+        .product:hover {
+            transform: scale(1.05);
+        }
+        .product img {
+            width: 100%;
+            height: auto;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="hero">
+            <h1>Kategori Pakaian Anak</h1>
+            <p>Temukan pakaian wanita dengan gaya terbaru.</p>
+            <button onclick="location.href='index.html'">Kembali ke Beranda</button>
+        </div>
+    </header>    
+    <main>
+        <section id="products">
+            <h2>Produk Pakaian Anak</h2>
+            <div class="product-grid">
+                <!-- Contoh Produk -->
+                <div class="product">
+                    <img src="panak.jpeg" alt="Tshirt">
+                    <h3>Tshirt</h3>
+                    <p>Rp 200.000</p>
+                    <button onclick="addToCart('Tshirt', 200000)">Tambah ke Keranjang</button>
+                </div>
+                <div class="product">
+                    <img src="p2anak.jpeg" alt="Kemeja Kasual">
+                    <h3>Kemeja Kasual</h3>
+                    <p>Rp 120.000</p>
+                    <button onclick="addToCart('Kemeja Kasual', 120000)">Tambah ke Keranjang</button>
+                </div>
+                <div class="product">
+                    <img src="p3anak.jpeg" alt="Dress Stylish">
+                    <h3>Dress Stylish</h3>
+                    <p>Rp 250.000</p>
+                    <button onclick="addToCart('Dress Stylish', 250000)">Tambah ke Keranjang</button>
+                </div>
+                <!-- Tambahkan produk lainnya -->
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Toko Pakaian Online. Semua Hak Dilindungi.</p>
+    </footer>
+    <div class="cart" onclick="viewCart()">
+        Keranjang <span class="cart-count" id="cart-count">0</span>
+    </div>
+    
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Keranjang Anda</h2>
+            <div id="cart-items"></div>
+            <button onclick="checkout()">Checkout</button>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+
+        function addToCart(productName, productPrice) {
+            cart.push({ name: productName, price: productPrice });
+            updateCartCount();
+            alert(`${productName} telah ditambahkan ke keranjang!`);
+        }
+
+        function updateCartCount() {
+            document.getElementById('cart-count').innerText = cart.length;
+        }
+
+        function viewCart() {
+            if (cart.length === 0) {
+                alert("Keranjang Anda kosong.");
+                return;
+            }
+            displayCartItems();
+            document.getElementById('cartModal').style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById('cartModal').style.display = "none";
+        }
+
+        function displayCartItems() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = '';
+            cart.forEach(item => {
+                cartItemsContainer.innerHTML += `<p>${item.name} - Rp ${item.price}</p>`;
+            });
+        }
+
+        function checkout() {
+            localStorage.setItem('cart', JSON.stringify(cart)); // Save cart to local storage
+            window.location.href = 'checkout.html'; // Redirect to checkout page
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('cartModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
